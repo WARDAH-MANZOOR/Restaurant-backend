@@ -1,0 +1,83 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum UserRole {
+  ADMIN
+  RESTAURANT
+  HOME_BASED_RESTAURANT
+  CUSTOMER
+}
+
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  password      String
+  role          UserRole  @default(CUSTOMER)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  adminProfile        AdminProfile?
+  restaurantProfile   RestaurantProfile?
+  homeBasedRestaurant HomeBasedRestaurant?
+  customerProfile     CustomerProfile?
+}
+
+model AdminProfile {
+  id      String @id @default(uuid())
+  userId  String @unique
+  user    User   @relation(fields: [userId], references: [id])
+}
+
+model RestaurantProfile {
+  id          String    @id @default(uuid())
+  userId      String    @unique
+  user        User      @relation(fields: [userId], references: [id])
+  name        String
+  cuisineType String[]
+  ownerName   String
+  ownerPhone  String
+  isApproved  Boolean   @default(false)
+  orders      Order[]
+}
+
+model HomeBasedRestaurant {
+  id          String    @id @default(uuid())
+  userId      String    @unique
+  user        User      @relation(fields: [userId], references: [id])
+  name        String
+  cuisineType String[]
+  ownerName   String
+  ownerPhone  String
+  isApproved  Boolean   @default(false)
+  orders      Order[]
+}
+
+model CustomerProfile {
+  id        String  @id @default(uuid())
+  userId    String  @unique
+  user      User    @relation(fields: [userId], references: [id])
+  name        String
+  phone     String
+  address   String
+  orders    Order[]
+}
+
+model Order {
+  id            String    @id @default(uuid())
+  customerId    String
+  customer      CustomerProfile @relation(fields: [customerId], references: [id])
+  restaurantId  String?
+  restaurant    RestaurantProfile? @relation(fields: [restaurantId], references: [id])
+  homeBasedRestaurantId String?
+  homeBasedRestaurant HomeBasedRestaurant? @relation(fields: [homeBasedRestaurantId], references: [id])
+  totalAmount   Float
+  commission    Float
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
