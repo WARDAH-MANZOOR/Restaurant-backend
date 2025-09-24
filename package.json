@@ -4,16 +4,15 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon ./src/bin/www",
-    "migrate": "prisma migrate dev --schema src/prisma/schema.prisma",
-    "generate": "prisma generate --schema src/prisma/schema.prisma",
-    "build": "npm run migrate && npm run generate && npx tsc",
     "dev": "npx tsc && nodemon ./src/bin/www",
-    "seed": "node dist/prisma/seed.js"
+    "build": "npm run migrate && npm run generate && npx tsc",
+    "migrate": "prisma migrate dev --schema src/prisma/schema.prisma",
+    "generate": "prisma generate --schema src/prisma/schema.prisma"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "description": "",
   "dependencies": {
     "@prisma/client": "^6.15.0",

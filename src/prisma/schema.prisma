@@ -15,7 +15,8 @@ enum UserRole {
 }
 
 model User {
-  id            String    @id @default(uuid())
+  uid            String    @default(uuid())
+  user_id         Int       @id @default(autoincrement())
   email         String    @unique
   password      String
   role          UserRole  @default(CUSTOMER)
@@ -30,14 +31,14 @@ model User {
 
 model AdminProfile {
   id      String @id @default(uuid())
-  userId  String @unique
-  user    User   @relation(fields: [userId], references: [id])
+  userId  Int  @unique
+  user    User   @relation(fields: [userId], references: [user_id])
 }
 
 model RestaurantProfile {
-  id          String    @id @default(uuid())
-  userId      String    @unique
-  user        User      @relation(fields: [userId], references: [id])
+  id          Int    @id @default(autoincrement())
+  userId      Int    @unique
+  user        User      @relation(fields: [userId], references: [user_id])
   name        String
   cuisineType String[]
   ownerName   String
@@ -47,9 +48,9 @@ model RestaurantProfile {
 }
 
 model HomeBasedRestaurant {
-  id          String    @id @default(uuid())
-  userId      String    @unique
-  user        User      @relation(fields: [userId], references: [id])
+  id          Int    @id @default(autoincrement())
+  userId      Int     @unique
+  user        User      @relation(fields: [userId], references: [user_id])
   name        String
   cuisineType String[]
   ownerName   String
@@ -59,9 +60,9 @@ model HomeBasedRestaurant {
 }
 
 model CustomerProfile {
-  id        String  @id @default(uuid())
-  userId    String  @unique
-  user      User    @relation(fields: [userId], references: [id])
+  id          Int    @id @default(autoincrement())
+  userId      Int @unique
+  user      User    @relation(fields: [userId], references: [user_id])
   name        String
   phone     String
   address   String
@@ -69,12 +70,12 @@ model CustomerProfile {
 }
 
 model Order {
-  id            String    @id @default(uuid())
-  customerId    String
+  id          Int    @id @default(autoincrement())
+  customerId    Int @unique
   customer      CustomerProfile @relation(fields: [customerId], references: [id])
-  restaurantId  String?
+  restaurantId  Int? @unique
   restaurant    RestaurantProfile? @relation(fields: [restaurantId], references: [id])
-  homeBasedRestaurantId String?
+  homeBasedRestaurantId Int? @unique
   homeBasedRestaurant HomeBasedRestaurant? @relation(fields: [homeBasedRestaurantId], references: [id])
   totalAmount   Float
   commission    Float

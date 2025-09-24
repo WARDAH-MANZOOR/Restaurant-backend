@@ -1,5 +1,5 @@
-// import authenticationService from './authentication/index.js';
+import authenticationService from './authentication/index.js';
 
-// export {
-//     authenticationService
-// }
+export {
+    authenticationService
+}
